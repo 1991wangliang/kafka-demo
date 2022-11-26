@@ -4,6 +4,8 @@ services:
   kafka-ui:
     container_name: kafka-ui
     image: provectuslabs/kafka-ui:latest
+    networks:
+      - flink-network
     ports:
       - '8080:8080'
     depends_on:
@@ -15,6 +17,8 @@ services:
   zookeeper:
     image: confluentinc/cp-zookeeper:7.3.0
     container_name: zookeeper
+    networks:
+      - flink-network
     environment:
       ZOOKEEPER_CLIENT_PORT: 2181
       ZOOKEEPER_TICK_TIME: 2000
@@ -22,6 +26,8 @@ services:
   broker:
     image: confluentinc/cp-kafka:7.3.0
     container_name: broker
+    networks:
+      - flink-network
     ports:
     # To learn about configuring Kafka for access across networks see
     # https://www.confluent.io/blog/kafka-client-cannot-connect-to-broker-on-aws-on-docker-etc/
@@ -36,3 +42,7 @@ services:
       KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
       KAFKA_TRANSACTION_STATE_LOG_MIN_ISR: 1
       KAFKA_TRANSACTION_STATE_LOG_REPLICATION_FACTOR: 1
+
+networks:
+  flink-network:
+    external: true
